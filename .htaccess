@@ -1,0 +1,122 @@
+RewriteEngine On
+
+<IfModule mod_headers.c>
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
+ErrorDocument 404 /404.php
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# One-hop legacy detail URLs with .php and query strings
+RewriteCond %{THE_REQUEST} \s/blog-detail\.php\?slug=([^&\s]+) [NC]
+RewriteRule ^ /blog/%1? [R=301,L]
+RewriteCond %{THE_REQUEST} \s/event-detail\.php\?id=([0-9]+) [NC]
+RewriteRule ^ /event/%1? [R=301,L]
+RewriteCond %{THE_REQUEST} \s/gallery-detail\.php\?id=([0-9]+) [NC]
+RewriteRule ^ /gallery/%1? [R=301,L]
+
+# One-hop legacy page redirects
+RewriteCond %{THE_REQUEST} \s/photo-gallery\.php [NC]
+RewriteRule ^ /photos [R=301,L]
+RewriteCond %{THE_REQUEST} \s/student-work-samples\.php [NC]
+RewriteRule ^ /student-work-sample [R=301,L]
+
+# Redirect www to non-www (skip for localhost)
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1|192\.168\.1\.195) [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# Force HTTPS (skip for localhost)
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1|192\.168\.1\.195) [NC]
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Redirect .php to clean URL (preserve full subdirectory path)
+# Use 302 on localhost so bad redirects are not cached permanently during dev
+RewriteCond %{HTTP_HOST} ^(localhost|127\.0\.0\.1|192\.168\.1\.195) [NC]
+RewriteCond %{THE_REQUEST} \s(/.*?)\.php[\s?] [NC]
+RewriteRule ^ %1 [R=302,L]
+
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1|192\.168\.1\.195) [NC]
+RewriteCond %{THE_REQUEST} \s(/.*?)\.php[\s?] [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# Serve existing files and directories as-is
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Home page
+RewriteRule ^$ index.php [L]
+
+# SEO slug redirects and rewrites (Alle Kids All Website Slug)
+# 301: old root slugs -> new nested slugs
+RewriteRule ^school-calendar/?$ /parent-resources/school-calendar [R=301,L,QSA]
+RewriteRule ^daily-routine/?$ /parent-resources/daily-routine [R=301,L,QSA]
+RewriteRule ^tips-for-parent/?$ /parent-resources/tips-for-parents [R=301,L,QSA]
+RewriteRule ^health-safety-policies/?$ /parent-resources/health-safety-policies [R=301,L,QSA]
+RewriteRule ^testimonial/?$ /parent-resources/testimonials [R=301,L,QSA]
+RewriteRule ^photos/?$ /gallery/photos [R=301,L,QSA]
+RewriteRule ^videos/?$ /gallery/videos [R=301,L,QSA]
+RewriteRule ^virtual-tour/?$ /gallery/virtual-tour [R=301,L,QSA]
+
+# Rewrite new nested slugs to existing page content
+RewriteRule ^parent-resources/school-calendar/?$ page-template.php?page=school-calendar [L,QSA]
+RewriteRule ^parent-resources/daily-routine/?$ page-template.php?page=daily-routine [L,QSA]
+RewriteRule ^parent-resources/tips-for-parents/?$ page-template.php?page=tips-for-parent [L,QSA]
+RewriteRule ^parent-resources/health-safety-policies/?$ page-template.php?page=health-safety-policies [L,QSA]
+RewriteRule ^parent-resources/testimonials/?$ page-template.php?page=testimonial [L,QSA]
+RewriteRule ^gallery/photos/?$ page-template.php?page=photos [L,QSA]
+RewriteRule ^gallery/videos/?$ page-template.php?page=videos [L,QSA]
+RewriteRule ^gallery/virtual-tour/?$ page-template.php?page=virtual-tour [L,QSA]
+
+# Program page rewrites (PDF program page slugs)
+RewriteRule ^programs/toodler/?$ program-single.php?slug=best-toddler-program-near-swaroop-nagar-allen-kids [L,QSA]
+RewriteRule ^programs/toddler/?$ program-single.php?slug=best-toddler-program-near-swaroop-nagar-allen-kids [L,QSA]
+RewriteRule ^programs/playgroup-1/?$ program-single.php?slug=best-playgroup-for-toddlers-in-swaroop-nagar-allen-kids [L,QSA]
+RewriteRule ^programs/playgroup-2/?$ program-single.php?slug=allen-kids-best-playgroup-school-in-swaroop-nagar-kanpur [L,QSA]
+RewriteRule ^programs/nursery/?$ program-single.php?slug=early-childhood-nursery-program-allen-kids-swaroop-nagar [L,QSA]
+RewriteRule ^programs/preparatory/?$ program-single.php?slug=preparatory-school-program-in-swaroop-nagar-allen-kids [L,QSA]
+
+# Internally rewrite clean URLs to real .php files
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+?)/?$ $1.php [L]
+
+# Friendly URL rewrites
+RewriteRule ^home/?$ index.php [NC,L]
+RewriteRule ^newsletter/?$ newsletters.php [NC,L]
+RewriteRule ^blogs/?$ blogs.php [NC,L]
+RewriteRule ^blog/([A-Za-z0-9-]+)/?$ blog-detail.php?slug=$1 [NC,L]
+RewriteRule ^view/([A-Za-z0-9-]+)/?$ detail-view.php?slug=$1 [NC,L]
+
+# Program CMS SEO slugs are served via page-template.php → program-single.php
+# Legacy /program-single?id=… URLs 301-redirect in program-single.php
+
+# Blog, event and gallery clean URLs and legacy redirects
+RewriteRule ^blog-detail/([A-Za-z0-9-]+)/?$ /blog/$1 [R=301,L]
+RewriteCond %{QUERY_STRING} ^slug=([^&]+)
+RewriteRule ^blog-detail$ /blog/%1? [R=301,L]
+
+RewriteRule ^event-detail/([0-9]+)/?$ /event/$1 [R=301,L]
+RewriteCond %{QUERY_STRING} ^id=([0-9]+)
+RewriteRule ^event-detail$ /event/%1? [R=301,L]
+RewriteRule ^event/([0-9]+)/?$ event-detail.php?id=$1 [NC,L]
+
+RewriteRule ^gallery-detail/([0-9]+)/?$ /gallery/$1 [R=301,L]
+RewriteCond %{QUERY_STRING} ^id=([0-9]+)
+RewriteRule ^gallery-detail$ /gallery/%1? [R=301,L]
+RewriteRule ^gallery$ photos.php [NC,L]
+RewriteRule ^gallery/([0-9]+)/?$ gallery-detail.php?id=$1 [NC,L]
+
+# Also handle legacy photo-gallery / student-work-samples without .php
+RewriteRule ^photo-gallery$ /photos [R=301,L]
+RewriteRule ^student-work-samples$ /student-work-sample [R=301,L]
+
+# CMS dynamic pages fallback
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/?$ page-template.php?page=$1 [L,QSA]
