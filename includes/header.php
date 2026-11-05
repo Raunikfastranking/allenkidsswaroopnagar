@@ -403,11 +403,11 @@ require_once __DIR__ . '/program-config.php';
 
     .enquiry-popup-container {
         background: #ff424f;
-        padding: 50px 40px;
+        padding: 24px 40px;
         border-radius: 20px;
         max-width: 500px;
         width: 100%;
-        max-height: 90vh;
+        max-height: 96vh;
         overflow-y: auto;
         position: relative;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -575,83 +575,9 @@ require_once __DIR__ . '/program-config.php';
           </button>
 
           <div class="popup-content">
-              <h2 class="text-[32px] font-[500] text-white text-center mb-8">Enquiry For Session</h2>
+              <h2 class="text-[32px] font-[500] text-white text-center mb-4">Enquiry For Session</h2>
 
-              <form id="HeadercontactForm" class="popup-form">
-
-                  <!-- Vertical Fields -->
-                 <div class="form-group-vertical">
-     <select name="session"
-    class="bg-white h-[45px] rounded-[6px] w-[100%] text-gray-500 pl-2"
-    id="years" required>
-
-    <option value="" disabled selected>Enquiry For Session</option>
-
-    <?php
-    $uniqueSessions = [];
-
-    if (!empty($sessions)):
-        foreach ($sessions as $item):
-            $sessionName = trim($item['session'] ?? '');
-            if ($sessionName === '') continue;
-
-            if (in_array($sessionName, $uniqueSessions, true)) continue;
-            $uniqueSessions[] = $sessionName;
-    ?>
-            <option value="<?= htmlspecialchars($sessionName) ?>">
-                <?= htmlspecialchars($sessionName) ?>
-            </option>
-    <?php
-        endforeach;
-    else:
-    ?>
-        <option value="">No sessions available</option>
-    <?php endif; ?>
-</select>
-</div>
-
-               <div class="form-group-vertical">
-    <select name="grade" class="form-input" id="hgrade" required>
-        <option value="" selected>Choose Grade</option>
-        <?php include __DIR__ . '/grade-api.php'; ?>
-    </select>
-</div>
-
-                  <div class="form-group-vertical relative">
-                      <input type="text" class="form-input" id="hchildname" placeholder="Enter Child's Name" required maxlength="30">
-                      <span id="hchildname-error" class="text-black text-sm mt-1 hidden text-[15px]">Only
-                          letters and spaces allowed.</span>
-                  </div>
-
-                  <div class="form-group-vertical relative">
-                      <input type="text" class="form-input" id="hfmgname" placeholder="Father / Mother / Guardian Name"
-                          required maxlength="30">
-                      <span id="hfmgname-error" class="text-black text-sm mt-1 hidden text-[15px]">Only
-                          letters and spaces allowed.</span>
-                  </div>
-
-                  <div class="form-group-vertical relative">
-                      <input type="text" class="form-input" id="hmobile" placeholder="Enter Your Mobile No" required>
-                      <div id="hmobile-error" class="text-black text-sm mt-1 hidden text-[15px]">Please enter valid phone
-                          number</div>
-                  </div>
-
-                  <div class="form-group-vertical">
-                      <input type="email" class="form-input" id="hemail" placeholder="Enter Your Email" required>
-                      <span id="hemail-error" class="text-black text-sm mt-1 hidden text-[15px]">Please
-                          enter a valid email address.</span>
-                  </div>
-                  <input type="hidden" id="hsource" value="">
-                  <div class="form-submit">
-                      <button type="submit" id="hcontacthSubmitBtn" class="submit-btn">
-                          Submit
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                              <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"
-                                  stroke-width="1.5" d="M4.5 12h15m0 0l-5.625-6m5.625 6l-5.625 6" />
-                          </svg>
-                      </button>
-                  </div>
-              </form>
+              <?php $eeFormId = 'ee-form-11-popup'; include __DIR__ . '/enquiry-widget.php'; ?>
           </div>
       </div>
   </div>
