@@ -9,6 +9,15 @@ $eeFormId = $eeFormId ?? 'ee-form-11';
     .ee-form-widget .ee-row select { padding-top: 14px !important; padding-bottom: 6px !important; }
     .ee-form-widget h2 { display: none; }
     .jquery-modal { z-index: 1000001 !important; }
+    .ee-form-widget { container-type: inline-size; }
+    @container (min-width: 640px) {
+        .ee-form-widget .ee-form-body { column-gap: 3%; }
+        .ee-form-widget .ee-form-body > .ee-row {
+            width: 48.5% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+    }
     @media (max-height: 800px) {
         .ee-form-widget .ee-row:not(:last-child) { margin-bottom: 8px; }
         .ee-form-widget .ee-row select { padding-top: 8px !important; padding-bottom: 4px !important; }
