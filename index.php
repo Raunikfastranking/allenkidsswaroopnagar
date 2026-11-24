@@ -147,7 +147,7 @@ $pageData = $homePage;
         <section class="mt-20">
             <div class="comman-container">
                 <div class="md:flex gap-12">
-                    <div data-aos="zoom-in-right md:w-[45%]">
+                    <div class="md:w-[45%]" data-aos="zoom-in-right">
                         <img src="<?php echo $homePage['data']['sections'][2]['columns'][0]['image_url'] ?? "assets/images/why-choose-us/why-choose-us.webp" ?>" width="100%" alt="<?= htmlspecialchars($homePage['data']['sections'][2]['columns'][0]['image_alt'] ?? '') ?>">
                     </div>
                     <div class="md:mt-0 mt-5 md:w-[55%]">
