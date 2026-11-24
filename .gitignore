@@ -21,3 +21,7 @@ Desktop.ini
 # PHP dependencies (if ever added)
 vendor/
 composer.lock
+
+# API response cache
+proxy/cache/*.json
+proxy/cache/*.tmp
