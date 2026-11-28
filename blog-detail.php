@@ -151,9 +151,9 @@ echo json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
                                                 <?= htmlspecialchars($detail['title'] ?? 'Untitled Blog') ?>
                                             </h2>
 
-                                            <p class="w-[90%] text-[#70747F] text-[20px] mt-2">
+                                            <div class="blog-cms-content mt-2">
                                                 <?= $detail['description'] ?? 'No description available.' ?>
-                                            </p>
+                                            </div>
                                         </div>
                                     </div>
                                 <?php } ?>
