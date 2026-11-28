@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/api-cache.php';
 
 $api_url = API_BASE_URL;
 
@@ -9,12 +10,26 @@ function fetchMultipleApiData($endpoints)
     $mh = curl_multi_init();
     $curlHandles = [];
     $responses = [];
-    // Create all curl handles
+
+    // Fresh cache hits skip the network entirely.
     foreach ($endpoints as $key => $endpoint) {
+        $cached = allenkids_api_cache_read($endpoint);
+        if ($cached !== null) {
+            $responses[$key] = $cached;
+        }
+    }
+
+    // Create curl handles only for expired/missing endpoints
+    foreach ($endpoints as $key => $endpoint) {
+        if (array_key_exists($key, $responses)) {
+            continue;
+        }
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $baseUrl . $endpoint . '?cb=' . time());
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, api_auth_headers());
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , (!preg_match('/^(localhost|127[.]0[.]0[.]1|192[.]168[.]1[.]195|.*[.]localhost)(:[0-9]+)?$/i', $_SERVER['HTTP_HOST'] ?? '')));
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST , ((!preg_match('/^(localhost|127[.]0[.]0[.]1|192[.]168[.]1[.]195|.*[.]localhost)(:[0-9]+)?$/i', $_SERVER['HTTP_HOST'] ?? '')) ? 2 : 0));
         curl_multi_add_handle($mh, $ch);
@@ -34,7 +49,14 @@ function fetchMultipleApiData($endpoints)
     // Collect responses
     foreach ($curlHandles as $key => $ch) {
         $content = curl_multi_getcontent($ch);
-        $responses[$key] = json_decode($content, true);
+        $decoded = is_string($content) ? json_decode($content, true) : null;
+        if ($decoded === null) {
+            // Upstream failed/timed out — serve stale cache if we have it.
+            $decoded = allenkids_api_cache_read($endpoints[$key], true);
+        } else {
+            allenkids_api_cache_write($endpoints[$key], $content);
+        }
+        $responses[$key] = $decoded;
         curl_multi_remove_handle($mh, $ch);
         curl_close($ch);
     }

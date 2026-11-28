@@ -235,20 +235,13 @@ $GLOBALS['ogMeta'] = $ogMeta;
         <!--==== END ====-->
 
         <!-- Modal -->
-        <div id="enquiryModal" class="fixed inset-0 bg-white/30 flex items-center justify-center z-[999] hidden">
-            <!-- Modal Container -->
-            <div class="bg-[#2C4073] p-6 rounded-[10px]  relative">
-                <!-- Close Button -->
-                <button onclick="closeModal()" class="absolute top-2 right-2 text-white text-2xl">&times;</button>
-                <div class="md:w-[400px] md:mx-auto mx-4">
-                    <div>
-                        <h2 class="text-[32px] font-[500] text-white text-center">Enquiry For Session</h2>
-                        <div>
-                            <?php $eeFormId = 'ee-form-11-modal'; include __DIR__ . '/includes/enquiry-widget.php'; ?>
-                        </div>
-                    </div>
-                </div>
-
+        <div id="enquiryModal" class="program-enquiry-modal-overlay hidden" role="dialog" aria-modal="true"
+            aria-labelledby="programEnquiryTitle">
+            <div class="program-enquiry-modal-panel">
+                <button type="button" onclick="closeModal()" class="program-enquiry-modal-close"
+                    aria-label="Close enquiry form">&times;</button>
+                <h2 id="programEnquiryTitle" class="program-enquiry-modal-title">Enquiry For Session</h2>
+                <?php $eeFormId = 'ee-form-11-modal'; include __DIR__ . '/includes/enquiry-widget.php'; ?>
             </div>
         </div>
 
@@ -272,10 +265,12 @@ $GLOBALS['ogMeta'] = $ogMeta;
     <script>
         function openModal() {
             document.getElementById("enquiryModal").classList.remove("hidden");
+            document.body.classList.add("program-enquiry-modal-open");
         }
 
         function closeModal() {
             document.getElementById("enquiryModal").classList.add("hidden");
+            document.body.classList.remove("program-enquiry-modal-open");
         }
 
         // Optional: Close modal when clicking outside the modal content
