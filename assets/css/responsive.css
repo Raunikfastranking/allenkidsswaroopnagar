@@ -77,3 +77,96 @@
  .footer {
      padding: 50px 10px 0;
  }
+
+/* Program pages — Enroll Now enquiry modal */
+.program-enquiry-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000002;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+
+.program-enquiry-modal-overlay.hidden {
+    display: none !important;
+}
+
+.program-enquiry-modal-panel {
+    position: relative;
+    width: min(100%, 440px);
+    max-height: none;
+    margin: auto;
+    padding: 22px 16px 20px;
+    border-radius: 10px;
+    background: #2C4073;
+    box-sizing: border-box;
+}
+
+.program-enquiry-modal-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.program-enquiry-modal-title {
+    margin: 0 0 12px;
+    padding: 0 36px 0 8px;
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: #fff;
+    text-align: center;
+}
+
+body.program-enquiry-modal-open {
+    overflow: hidden;
+}
+
+body.program-enquiry-modal-open .fixed-sidebar-buttons {
+    display: none !important;
+}
+
+.program-enquiry-modal-panel .ee-form-widget {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box;
+}
+
+@media (min-width: 480px) {
+    .program-enquiry-modal-overlay {
+        align-items: center;
+        padding: 20px;
+    }
+
+    .program-enquiry-modal-panel {
+        padding: 24px 24px 20px;
+        max-height: min(92vh, 900px);
+        overflow-y: auto;
+    }
+
+    .program-enquiry-modal-title {
+        font-size: 32px;
+    }
+}

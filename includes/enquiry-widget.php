@@ -18,6 +18,33 @@ $eeFormId = $eeFormId ?? 'ee-form-11';
             margin-right: 0 !important;
         }
     }
+    @container (max-width: 639px) {
+        .ee-form-widget .ee-form-body > .ee-row {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            float: none !important;
+        }
+    }
+    @media (max-width: 767px) {
+        .ee-form-widget .ee-form-body > .ee-row {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            float: none !important;
+            box-sizing: border-box;
+        }
+        .ee-form-widget input,
+        .ee-form-widget select,
+        .ee-form-widget textarea,
+        .ee-form-widget .iti,
+        .ee-form-widget .captchaContainer {
+            max-width: 100% !important;
+            box-sizing: border-box;
+        }
+    }
     @media (max-height: 800px) {
         .ee-form-widget .ee-row:not(:last-child) { margin-bottom: 8px; }
         .ee-form-widget .ee-row select { padding-top: 8px !important; padding-bottom: 4px !important; }
